@@ -1,0 +1,29 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+
+<script>
+io = io.connect();
+
+// Emit ready event.
+io.emit('connection');
+
+// Listen for the talk event.
+io.on('message', function(msg) {
+    $('.receivedMessages').append("<span>"+msg+"</span>");
+});
+
+function sendMessage(){
+  var text = $('#chatbox')[0].value;
+  $('#chatbox')[0].value = "";
+  io.emit('message', text);
+}
+</script>
+<html>
+  <body>
+    <div class="receivedMessages">
+    </div>
+    <textarea id="chatbox" cols="128" rows="10" ></textarea>
+    <button id="submitButton" onclick="sendMessage()">Send</button>
+  </body>
+</html>
