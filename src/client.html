@@ -5,19 +5,33 @@
 <script>
 io = io.connect();
 
-// Emit ready event.
-io.emit('connection');
-
 // Listen for the talk event.
 io.on('message', function(msg) {
+    $('.receivedMessages').append("<span>"+msg.user + ": "+msg.message+"</span>");
+});
+
+io.on('announce',function(msg){
     $('.receivedMessages').append("<span>"+msg+"</span>");
 });
+
+var name = prompt("name:");
+// Emit ready event.
+io.emit('connection',name);
 
 function sendMessage(){
   var text = $('#chatbox')[0].value;
   $('#chatbox')[0].value = "";
-  io.emit('message', text);
+  io.emit('message', {
+                        user: name,
+                        message: text
+                     });
 }
+
+$( window ).unload(function() {
+  io.emit('leaving', {
+                        user: name,
+                     });
+});
 </script>
 <html>
   <body>
