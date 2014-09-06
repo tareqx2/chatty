@@ -4,7 +4,7 @@
 
 <script>
 io = io.connect();
-
+var name = "";
 // Listen for the talk event.
 io.on('message', function(msg) {
     $('.receivedMessages').append("<span>"+msg.user + ": "+msg.message+"</span>");
@@ -14,9 +14,22 @@ io.on('announce',function(msg){
     $('.receivedMessages').append("<span>"+msg+"</span>");
 });
 
-var name = prompt("name:");
-// Emit ready event.
-io.emit('connection',name);
+io.on('prompt',function(msg){
+  name = prompt(msg);
+
+  document.cookie="username="+name;
+  io.emit('username',name);
+});
+
+var cookie = document.cookie;
+
+if(cookie===undefined)
+  io.emit('connection',"");
+else{
+  name = cookie.substring(cookie.indexOf("username=")+9);
+  io.emit('connection',name);
+}
+  
 
 function sendMessage(){
   var text = $('#chatbox')[0].value;
