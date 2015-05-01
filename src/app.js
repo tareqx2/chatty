@@ -5,7 +5,7 @@ var app = express();
 app.http().io();
 
 app.use(express.cookieParser());
-app.use(express.session({secret: 'ballsacktest'}));
+app.use(express.session({secret: 'testpass'}));
 
 app.use(express.static(__dirname + '/'));
 app.use(express.static(__dirname + '/../bower_components'));
